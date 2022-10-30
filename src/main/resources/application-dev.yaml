@@ -1,0 +1,56 @@
+server:
+  port: 8080 #端口
+spring:
+  application:
+    name: dev #服务名
+  datasource:
+    # 数据源基本配置
+    url: jdbc:mysql://localhost:3306/student?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 数据源其他配置
+    druid:
+      # 配置初始化大小、最小、最大线程数
+      initialSize: 5
+      minIdle: 5
+      # CPU核数+1，也可以大些但不要超过20，数据库加锁时连接过多性能下降
+      maxActive: 20
+      # 最大等待时间，内网：800，外网：1200（三次握手1s）
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最大空间时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      # 设置从连接池获取连接时是否检查连接有效性，true检查，false不检查
+      testOnBorrow: true
+      # 设置从连接池归还连接时是否检查连接有效性，true检查，false不检查
+      testOnReturn: true
+      # 可以支持PSCache（提升写入、查询效率）
+      poolPreparedStatements: true
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      # 保持长连接
+      keepAlive: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      useGlobalDataSourceStat: true
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  rabbitmq: #rabbitmq配置
+    username: admin
+    password: admin
+    host: 123.249.5.53 #192.168.0.173
+    port: 5672
+    virtual-host: /  #异常原因：web端配置用户在"/"目录地址
+    connection-timeout: 30000
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.example.cn.demo.pojo     #实体类
+  config-location:
+#pagehelper分页插件
+#pagehelper:
+#  helperDialect: mysql
+#  reasonable: true
+#  supportMethodsArguments: true
+#  params: count=countSql
